@@ -3,7 +3,9 @@ package DataStructure.Graph;
 import DataStructure.Matrix.Matrix;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 public class Graph {
     public List<Node> nodes;
@@ -19,18 +21,16 @@ public class Graph {
         this.nodes = nodesList;
     }
 
-    public void MatrixToGraph(Matrix matrix){
-        for (int i = 0; i < matrix.cols - 1; i++) {
-            for (int j = 0; j < matrix.rows - 1; j++) {
-                if(matrix.matrix[i][j] != 0){
-                    if(!VerifyEdgeExistence(this.nodes.get(i), this.nodes.get(j))){
-                        Node startNode = this.nodes.get(i);
-                        Node endNode = this.nodes.get(j);
+    public void MatrixToGraph(Matrix matrix) {
+        for (int i = 0; i < matrix.rows; i++) {
+            for (int j = 0; j < matrix.cols; j++) {
+                if (matrix.matrix[i][j] != 0) {
+                    Node startNode = this.nodes.get(i);
+                    Node endNode = this.nodes.get(j);
+
+                    if (!VerifyEdgeExistence(startNode, endNode)) {
                         Edge newEdge = new Edge(matrix.matrix[i][j], startNode, endNode);
                         startNode.connections.add(newEdge);
-
-                        Edge reverseEdge = new Edge(matrix.matrix[i][j], endNode, startNode);
-                        endNode.connections.add(reverseEdge);
                     }
                 }
             }
@@ -41,9 +41,10 @@ public class Graph {
         SortConnections();
     }
 
+
     public boolean VerifyEdgeExistence(Node startNode, Node endNode){
         for (Edge edge : startNode.connections) {
-            if(edge.startNode == startNode && edge.endNode == endNode){
+            if((edge.startNode == startNode && edge.endNode == endNode) || (edge.startNode == endNode && edge.endNode == startNode)){
                 return true;
             }
         }
@@ -60,18 +61,68 @@ public class Graph {
     }
 
     public void SortConnections(){
-        List <Integer> connectionValues = new ArrayList<>();
+        List <Edge> connectionValues = new ArrayList<>();
         for (Node node : this.nodes) {
-            for (Edge edge : node.connections) {
-                connectionValues.add(edge.value);
+            connectionValues.addAll(node.connections);
+        }
+
+        connectionValues.sort((o1, o2) -> {
+            if(o1.value > o2.value){
+                return 1;
+            } else if(o1.value < o2.value){
+                return -1;
+            } else {
+                return 0;
+            }
+        });
+
+        System.out.println();
+        for (Edge edge : connectionValues) {
+            System.out.printf("From: " + edge.startNode.getDataNode() + " To: " + edge.endNode.getDataNode() + " Value: " + edge.value);
+            System.out.println();
+        }
+
+        System.out.println();
+        StartKruskalAlgorithm(connectionValues);
+    }
+
+    public void StartKruskalAlgorithm(List<Edge> connectionValues) {
+        List<Edge> mst = new ArrayList<>();
+        Map<Node, Node> parent = new HashMap<>();
+        int count = 0;
+
+        for (Node node : this.nodes) {
+            parent.put(node, node);
+        }
+
+        for (Edge edge : connectionValues) {
+            Node root1 = find(parent, edge.startNode);
+            Node root2 = find(parent, edge.endNode);
+
+            if (!root1.equals(root2)) {
+                mst.add(edge);
+                union(parent, root1, root2);
             }
         }
 
-        connectionValues.sort(Integer::compareTo);
-
-        for (int i = 0; i < connectionValues.size(); i++) {
-            System.out.printf(connectionValues.get(i) + " ");
+        System.out.println("AGM Valores Arestas:");
+        for (Edge edge : mst) {
+            System.out.println("Edge: " + edge.value + " From: " + edge.startNode.getDataNode() + " To: " + edge.endNode.getDataNode());
+            count += edge.value;
         }
+
+        System.out.println("Total cost: " + count);
+    }
+
+    private Node find(Map<Node, Node> parent, Node node) {
+        if (parent.get(node) != node) {
+            parent.put(node, find(parent, parent.get(node)));
+        }
+        return parent.get(node);
+    }
+
+    private void union(Map<Node, Node> parent, Node root1, Node root2) {
+        parent.put(root1, root2);
     }
 
 }

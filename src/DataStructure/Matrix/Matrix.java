@@ -14,27 +14,11 @@ public class Matrix {
     private Graph graph = new Graph();
 
     public Matrix(File file) throws IOException {
-        this.rows = file.getNumberOfLines() - 1;
+        this.rows = file.getNumberOfLines();
         this.cols = this.rows;
         this.matrix = new int[rows][cols];
 
         this.ReadMatrix(file);
-    }
-
-    public int getRows() {
-        return rows;
-    }
-
-    public void setRows(int rows) {
-        this.rows = rows;
-    }
-
-    public int getCols() {
-        return cols;
-    }
-
-    public void setCols(int cols) {
-        this.cols = cols;
     }
 
     public void ReadMatrix(File file) {
@@ -45,11 +29,11 @@ public class Matrix {
 
             graph.CreateNodes(line);
 
-            for (int i = 0; i < this.rows - 1; i++) {
+            for (int i = 0; i < this.rows; i++) {
                 line = raf.readLine();
                 String[] values = line.trim().split("\\s+");
 
-                for (int j = 0; j < this.cols - 1; j++) {
+                for (int j = 0; j < this.cols; j++) {
                     this.matrix[i][j] = Integer.parseInt(values[j]);
                 }
             }

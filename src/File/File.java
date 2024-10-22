@@ -17,6 +17,6 @@ public class File {
             lines++;
         }
         file.close();
-        return lines;
+        return lines - 2;
     }
 }
