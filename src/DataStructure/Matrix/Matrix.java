@@ -29,11 +29,11 @@ public class Matrix {
 
             graph.CreateNodes(line);
 
-            for (int i = 0; i < this.rows; i++) {
+            for (int i = 0; i < this.rows - 1; i++) {
                 line = raf.readLine();
                 String[] values = line.trim().split("\\s+");
 
-                for (int j = 0; j < this.cols; j++) {
+                for (int j = 0; j < this.cols - 1; j++) {
                     this.matrix[i][j] = Integer.parseInt(values[j]);
                 }
             }
