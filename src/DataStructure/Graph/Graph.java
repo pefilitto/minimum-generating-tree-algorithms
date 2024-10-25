@@ -89,12 +89,12 @@ public class Graph {
         }
 
         for (Edge edge : connectionValues) {
-            Node root1 = find(parent, edge.startNode);
-            Node root2 = find(parent, edge.endNode);
+            Node root1 = CompressionSearch(parent, edge.startNode);
+            Node root2 = CompressionSearch(parent, edge.endNode);
 
             if (!root1.equals(root2)) {
                 mst.add(edge);
-                union(parent, root1, root2);
+                UnionComponents(parent, root1, root2);
             }
         }
 
@@ -107,14 +107,14 @@ public class Graph {
         System.out.println("Custo Total: " + count);
     }
 
-    private Node find(Map<Node, Node> parent, Node node) {
+    private Node CompressionSearch(Map<Node, Node> parent, Node node) {
         if (parent.get(node) != node) {
-            parent.put(node, find(parent, parent.get(node)));
+            parent.put(node, CompressionSearch(parent, parent.get(node)));
         }
         return parent.get(node);
     }
 
-    private void union(Map<Node, Node> parent, Node root1, Node root2) {
+    private void UnionComponents(Map<Node, Node> parent, Node root1, Node root2) {
         parent.put(root1, root2);
     }
 }
