@@ -53,9 +53,9 @@ public class Graph {
 
     public void PrintGraph(){
         for (Node node : this.nodes) {
-            System.out.println("Node: " + node.dataNode);
+            System.out.println("Vértice: " + node.dataNode);
             for (Edge edge : node.connections) {
-                System.out.println("Edge: " + edge.value + " From: " + edge.startNode.getDataNode() + " To: " + edge.endNode.getDataNode());
+                System.out.println("Aresta: " + edge.value + " De: " + edge.startNode.getDataNode() + " Para: " + edge.endNode.getDataNode());
             }
         }
     }
@@ -76,13 +76,6 @@ public class Graph {
             }
         });
 
-        System.out.println();
-        for (Edge edge : connectionValues) {
-            System.out.printf("From: " + edge.startNode.getDataNode() + " To: " + edge.endNode.getDataNode() + " Value: " + edge.value);
-            System.out.println();
-        }
-
-        System.out.println();
         StartKruskalAlgorithm(connectionValues);
     }
 
@@ -107,11 +100,11 @@ public class Graph {
 
         System.out.println("AGM Valores Arestas:");
         for (Edge edge : mst) {
-            System.out.println("Edge: " + edge.value + " From: " + edge.startNode.getDataNode() + " To: " + edge.endNode.getDataNode());
+            System.out.println("Aresta: " + edge.value + " De: " + edge.startNode.getDataNode() + " Para: " + edge.endNode.getDataNode());
             count += edge.value;
         }
 
-        System.out.println("Total cost: " + count);
+        System.out.println("Custo Total: " + count);
     }
 
     private Node find(Map<Node, Node> parent, Node node) {
@@ -124,5 +117,4 @@ public class Graph {
     private void union(Map<Node, Node> parent, Node root1, Node root2) {
         parent.put(root1, root2);
     }
-
 }
